@@ -7,32 +7,73 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Noto+Sans+JP:wght@300;400;500;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #0e0e0f;
-    --surface: #161618;
-    --surface2: #1e1e21;
-    --border: #2a2a2e;
+    --bg: #0d0d0e;
+    --surface: #151517;
+    --surface2: #1c1c1f;
+    --surface3: #222226;
+    --border: #2c2c31;
     --accent: #e8ff47;
+    --accent2: #ff9f47;
     --text: #f0f0ee;
-    --muted: #666672;
+    --muted: #65656f;
     --danger: #ff4444;
-    --green: #47ffb0;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   html, body { height: 100%; overflow: hidden; background: var(--bg); color: var(--text); font-family: 'Noto Sans JP', sans-serif; font-weight: 300; }
   .app { display: flex; flex-direction: column; height: 100dvh; }
 
-  /* HEADER */
-  .header { flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; padding: 12px 16px; background: var(--surface); border-bottom: 1px solid var(--border); }
+  /* ── HEADER ── */
+  .header {
+    flex-shrink: 0; display: flex; align-items: center; justify-content: space-between;
+    padding: 12px 16px; background: var(--surface); border-bottom: 1px solid var(--border);
+  }
   .logo { font-family: 'Bebas Neue', sans-serif; font-size: 24px; letter-spacing: 4px; color: var(--accent); }
-  .btn-csv { background: transparent; border: 1px solid var(--border); border-radius: 6px; color: var(--muted); font-family: 'DM Mono', monospace; font-size: 11px; padding: 7px 12px; cursor: pointer; }
-  .btn-csv:active { border-color: var(--accent); color: var(--accent); }
+  .header-right { display: flex; gap: 8px; }
+  .btn-sm { background: transparent; border: 1px solid var(--border); border-radius: 6px; color: var(--muted); font-family: 'DM Mono', monospace; font-size: 11px; padding: 7px 12px; cursor: pointer; transition: all 0.15s; }
+  .btn-sm:active { border-color: var(--accent); color: var(--accent); }
 
-  /* TOP PANEL */
+  /* ── TOP PANEL ── */
   .top-panel { flex: 0 0 auto; max-height: 62dvh; overflow-y: auto; background: var(--surface); border-bottom: 2px solid var(--border); }
 
-  .form-area { padding: 14px 16px 16px; display: flex; flex-direction: column; gap: 12px; }
+  .form-area { padding: 14px 16px 18px; display: flex; flex-direction: column; gap: 14px; }
 
-  /* FIELD */
+  /* ── AI SCAN BUTTON ── */
+  .ai-scan-btn {
+    width: 100%; padding: 15px; border: none; border-radius: 12px;
+    background: linear-gradient(135deg, #1a1a1f 0%, #222228 100%);
+    border: 1.5px solid var(--accent);
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    cursor: pointer; transition: all 0.15s; position: relative; overflow: hidden;
+  }
+  .ai-scan-btn::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(135deg, rgba(232,255,71,0.08) 0%, transparent 60%);
+  }
+  .ai-scan-btn:active { transform: scale(0.98); }
+  .ai-scan-icon { font-size: 22px; }
+  .ai-scan-label { display: flex; flex-direction: column; align-items: flex-start; }
+  .ai-scan-main { font-weight: 700; font-size: 14px; color: var(--accent); letter-spacing: 0.5px; }
+  .ai-scan-sub { font-size: 10px; color: var(--muted); font-family: 'DM Mono', monospace; margin-top: 1px; }
+
+  /* ── AI RESULT CARD ── */
+  .ai-result {
+    display: none; background: var(--surface2); border: 1px solid var(--accent);
+    border-radius: 10px; overflow: hidden;
+  }
+  .ai-result.show { display: block; }
+  .ai-result-header {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 8px 12px; background: rgba(232,255,71,0.07); border-bottom: 1px solid var(--border);
+  }
+  .ai-result-badge { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--accent); letter-spacing: 1px; display: flex; align-items: center; gap: 5px; }
+  .ai-result-retry { background: none; border: none; color: var(--muted); font-size: 11px; cursor: pointer; font-family: 'DM Mono', monospace; padding: 2px 6px; border-radius: 4px; }
+  .ai-result-retry:active { color: var(--accent); }
+  .ai-result-body { padding: 12px; display: flex; flex-direction: column; gap: 8px; }
+  .ai-result-row { display: flex; flex-direction: column; gap: 3px; }
+  .ai-result-lbl { font-size: 9px; font-family: 'DM Mono', monospace; color: var(--muted); letter-spacing: 1px; text-transform: uppercase; }
+  .ai-result-val { font-size: 13px; color: var(--text); line-height: 1.5; }
+
+  /* ── FIELDS ── */
   .field { display: flex; flex-direction: column; gap: 5px; }
   .field label { font-size: 9px; font-family: 'DM Mono', monospace; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; }
   .field input, .field textarea {
@@ -44,73 +85,57 @@
   .field input:focus, .field textarea:focus { border-color: var(--accent); }
   .field input::placeholder, .field textarea::placeholder { color: var(--muted); font-size: 12px; }
   .field textarea { resize: none; }
+  .field input.ai-filled { border-color: var(--accent); background: rgba(232,255,71,0.04); }
 
-  /* URL INPUT ROW */
-  .url-row { display: flex; gap: 6px; }
-  .url-row input { flex: 1; min-width: 0; font-family: 'DM Mono', monospace; font-size: 11px; }
-  .btn-fetch {
-    flex-shrink: 0; padding: 0 14px; background: var(--accent); border: none; border-radius: 8px;
-    color: #0e0e0f; font-family: 'Noto Sans JP', sans-serif; font-weight: 700; font-size: 12px;
-    cursor: pointer; white-space: nowrap; transition: transform 0.1s;
-  }
-  .btn-fetch:active { transform: scale(0.96); }
-  .btn-fetch:disabled { background: var(--border); color: var(--muted); cursor: not-allowed; }
-
-  /* FETCH STATUS */
-  .fetch-status { display: none; align-items: center; gap: 8px; padding: 8px 12px; background: var(--surface2); border-radius: 6px; border: 1px solid var(--border); }
-  .fetch-status.show { display: flex; }
-  .mini-spinner { width: 14px; height: 14px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.7s linear infinite; flex-shrink: 0; }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  .fetch-status-text { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); }
-
-  /* TITLE INPUT */
-  .title-row { display: flex; gap: 6px; }
-  .title-row input { flex: 1; min-width: 0; }
-  .btn-clear-title { flex-shrink: 0; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: var(--muted); font-size: 13px; padding: 0 10px; cursor: pointer; display: flex; align-items: center; }
-  .btn-clear-title:active { border-color: var(--danger); color: var(--danger); }
-
-  /* PRICE */
   .price-wrap { position: relative; }
   .price-wrap input { padding-left: 22px; }
   .price-yen { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: var(--muted); font-family: 'DM Mono', monospace; font-size: 12px; pointer-events: none; }
 
-  /* ── IMAGES SECTION ── */
-  .images-section { display: flex; flex-direction: column; gap: 8px; }
+  /* ── IMAGES ── */
   .images-label { font-size: 9px; font-family: 'DM Mono', monospace; color: var(--muted); letter-spacing: 2px; text-transform: uppercase; }
 
-  /* メイン画像 */
   .main-img-area {
-    width: 100%; aspect-ratio: 16/9; max-height: 160px;
+    width: 100%; height: 150px;
     border: 2px dashed var(--border); border-radius: 10px;
     background: var(--surface2); display: flex; align-items: center; justify-content: center;
     cursor: pointer; overflow: hidden; position: relative; transition: border-color 0.2s;
   }
-  .main-img-area:active { border-color: var(--accent); }
   .main-img-area.has-img { border-style: solid; border-color: var(--accent); }
   .main-img-area img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .main-img-hint { color: var(--muted); font-size: 12px; text-align: center; line-height: 1.8; }
-  .main-img-hint span { font-size: 26px; display: block; color: var(--accent); }
-  .img-remove-btn { position: absolute; top: 6px; right: 6px; background: rgba(0,0,0,0.65); border: none; border-radius: 50%; color: #fff; width: 24px; height: 24px; font-size: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+  .main-img-hint { color: var(--muted); font-size: 12px; text-align: center; line-height: 1.9; }
+  .main-img-hint span { font-size: 24px; display: block; color: var(--muted); }
 
-  /* サブ画像グリッド */
+  .img-remove-btn {
+    position: absolute; top: 6px; right: 6px;
+    background: rgba(0,0,0,0.65); border: none; border-radius: 50%;
+    color: #fff; width: 24px; height: 24px; font-size: 11px;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+  }
+
   .sub-imgs-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
   .sub-img-slot {
     aspect-ratio: 1; border: 1.5px dashed var(--border); border-radius: 8px;
     background: var(--surface2); display: flex; align-items: center; justify-content: center;
-    cursor: pointer; overflow: hidden; position: relative; transition: border-color 0.2s;
+    cursor: pointer; overflow: hidden; position: relative;
   }
-  .sub-img-slot:active { border-color: var(--accent); }
   .sub-img-slot.has-img { border-style: solid; border-color: var(--border); }
-  .sub-img-slot img { width: 100%; height: 100%; object-fit: cover; display: block; }
-  .sub-img-add { color: var(--muted); font-size: 18px; }
-  .sub-img-slot .img-remove-btn { width: 18px; height: 18px; font-size: 10px; top: 2px; right: 2px; }
+  .sub-img-slot img { width: 100%; height: 100%; object-fit: cover; }
+  .sub-img-add { color: var(--muted); font-size: 20px; }
+  .sub-img-slot .img-remove-btn { width: 18px; height: 18px; font-size: 9px; top: 2px; right: 2px; }
 
-  /* カメラボタン */
-  .btn-camera { display: flex; align-items: center; justify-content: center; gap: 6px; width: 100%; padding: 10px; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: var(--muted); font-size: 13px; font-family: 'Noto Sans JP', sans-serif; cursor: pointer; }
+  .btn-camera {
+    display: flex; align-items: center; justify-content: center; gap: 6px;
+    width: 100%; padding: 10px; background: var(--surface2); border: 1px solid var(--border);
+    border-radius: 8px; color: var(--muted); font-size: 13px;
+    font-family: 'Noto Sans JP', sans-serif; cursor: pointer;
+  }
   .btn-camera:active { border-color: var(--accent); color: var(--accent); }
 
-  /* SUBMIT */
-  .submit-btn { width: 100%; padding: 13px; background: var(--accent); border: none; border-radius: 8px; color: #0e0e0f; font-family: 'Noto Sans JP', sans-serif; font-weight: 700; font-size: 14px; letter-spacing: 2px; cursor: pointer; }
+  .submit-btn {
+    width: 100%; padding: 13px; background: var(--accent); border: none; border-radius: 8px;
+    color: #0d0d0e; font-family: 'Noto Sans JP', sans-serif; font-weight: 700;
+    font-size: 14px; letter-spacing: 2px; cursor: pointer;
+  }
   .submit-btn:active { transform: scale(0.98); background: #d4eb30; }
 
   /* ── BOTTOM ── */
@@ -130,12 +155,12 @@
   .card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; overflow: hidden; animation: pop 0.25s ease; cursor: pointer; }
   @keyframes pop { from { opacity: 0; transform: scale(0.93); } to { opacity: 1; transform: scale(1); } }
   .card:active { border-color: var(--accent); }
-  .card-img { width: 100%; height: 110px; object-fit: cover; display: block; }
-  .card-no-img { width: 100%; height: 110px; background: var(--surface2); display: flex; align-items: center; justify-content: center; font-size: 30px; color: var(--border); }
+  .card-img { width: 100%; height: 120px; object-fit: cover; display: block; }
+  .card-no-img { width: 100%; height: 120px; background: var(--surface2); display: flex; align-items: center; justify-content: center; font-size: 30px; color: var(--border); }
   .card-body { padding: 8px 10px; }
-  .card-name { font-weight: 500; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 3px; }
-  .card-price { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--accent); margin-bottom: 3px; }
-  .card-note { font-size: 10px; color: var(--muted); line-height: 1.5; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .card-name { font-weight: 500; font-size: 12px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-bottom: 2px; }
+  .card-brand { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--accent2); margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .card-price { font-family: 'DM Mono', monospace; font-size: 12px; color: var(--accent); }
   .card-footer { display: flex; align-items: center; justify-content: space-between; padding: 5px 10px; border-top: 1px solid var(--border); }
   .card-date { font-family: 'DM Mono', monospace; font-size: 9px; color: var(--muted); }
   .card-del { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 13px; padding: 2px 5px; }
@@ -144,39 +169,50 @@
   .empty-icon { font-size: 36px; margin-bottom: 8px; }
   .empty-txt { font-family: 'DM Mono', monospace; font-size: 11px; }
 
-  /* CAMERA MODAL */
+  /* ── AI LOADING OVERLAY ── */
+  .ai-overlay {
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.88);
+    z-index: 600; align-items: center; justify-content: center; flex-direction: column; gap: 16px;
+  }
+  .ai-overlay.open { display: flex; }
+  .ai-spinner { width: 48px; height: 48px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 0.8s linear infinite; }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .ai-overlay-label { font-family: 'DM Mono', monospace; font-size: 13px; color: var(--muted); letter-spacing: 1px; }
+  .ai-overlay-sub { font-size: 11px; color: var(--border); font-family: 'DM Mono', monospace; }
+
+  /* ── CAMERA MODAL ── */
   .camera-modal { display: none; position: fixed; inset: 0; background: #000; z-index: 500; flex-direction: column; }
   .camera-modal.open { display: flex; }
   .camera-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; background: rgba(0,0,0,0.75); position: absolute; top: 0; left: 0; right: 0; z-index: 10; }
   .camera-title { font-family: 'Bebas Neue', sans-serif; font-size: 20px; letter-spacing: 3px; color: var(--accent); }
-  .camera-target-label { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--muted); }
+  .camera-subtitle { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); margin-top: 2px; }
   .camera-close { background: none; border: 1px solid var(--border); border-radius: 6px; color: var(--muted); font-size: 13px; padding: 6px 12px; cursor: pointer; font-family: 'DM Mono', monospace; }
   #videoEl { width: 100%; height: 100dvh; object-fit: cover; }
   .camera-footer { position: absolute; bottom: 0; left: 0; right: 0; padding: 20px 24px 36px; background: linear-gradient(transparent, rgba(0,0,0,0.85)); display: flex; align-items: center; justify-content: center; gap: 20px; }
   .shutter-btn { width: 68px; height: 68px; border-radius: 50%; background: #fff; border: 4px solid rgba(255,255,255,0.4); cursor: pointer; flex-shrink: 0; }
   .shutter-btn:active { transform: scale(0.9); }
-  .gallery-btn2 { width: 48px; height: 48px; border-radius: 10px; background: var(--surface2); border: 1px solid var(--border); color: var(--text); font-size: 22px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+  .cam-gallery-btn { width: 48px; height: 48px; border-radius: 10px; background: var(--surface2); border: 1px solid var(--border); font-size: 22px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
 
-  /* DETAIL MODAL */
+  /* ── DETAIL MODAL ── */
   .modal-bg { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.75); z-index: 300; align-items: flex-end; }
   .modal-bg.open { display: flex; }
-  .modal { background: var(--surface); border-radius: 16px 16px 0 0; width: 100%; max-height: 90dvh; overflow-y: auto; animation: slideUp 0.25s cubic-bezier(0.34,1.56,0.64,1); }
+  .detail-modal { background: var(--surface); border-radius: 16px 16px 0 0; width: 100%; max-height: 90dvh; overflow-y: auto; animation: slideUp 0.25s cubic-bezier(0.34,1.56,0.64,1); }
   @keyframes slideUp { from { transform: translateY(100%); } to { transform: translateY(0); } }
   .modal-handle { width: 36px; height: 4px; background: var(--border); border-radius: 2px; margin: 12px auto 0; }
-  .modal-main-img { width: 100%; max-height: 220px; object-fit: cover; display: block; margin-top: 12px; }
-  .modal-sub-imgs { display: flex; gap: 6px; padding: 10px 16px 0; overflow-x: auto; }
+  .modal-main-img { width: 100%; max-height: 240px; object-fit: cover; display: block; margin-top: 12px; }
+  .modal-sub-row { display: flex; gap: 6px; padding: 10px 16px 0; overflow-x: auto; }
   .modal-sub-img { width: 72px; height: 72px; object-fit: cover; border-radius: 6px; flex-shrink: 0; border: 1px solid var(--border); }
   .modal-body { padding: 16px; }
-  .modal-name { font-weight: 700; font-size: 15px; margin-bottom: 6px; line-height: 1.4; }
-  .modal-url { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--muted); word-break: break-all; margin-bottom: 8px; }
-  .modal-url a { color: var(--accent); text-decoration: none; }
-  .modal-price { font-family: 'DM Mono', monospace; font-size: 18px; color: var(--accent); margin-bottom: 10px; }
+  .modal-brand { font-family: 'DM Mono', monospace; font-size: 11px; color: var(--accent2); letter-spacing: 1px; margin-bottom: 4px; }
+  .modal-name { font-weight: 700; font-size: 16px; margin-bottom: 4px; line-height: 1.4; }
+  .modal-ai-desc { font-size: 12px; color: var(--muted); line-height: 1.6; margin-bottom: 10px; background: var(--surface2); padding: 10px 12px; border-radius: 6px; border-left: 2px solid var(--accent); }
+  .modal-price { font-family: 'Bebas Neue', sans-serif; font-size: 24px; color: var(--accent); margin-bottom: 10px; }
   .modal-note { font-size: 13px; color: var(--muted); line-height: 1.7; margin-bottom: 12px; white-space: pre-wrap; }
   .modal-date { font-family: 'DM Mono', monospace; font-size: 10px; color: var(--border); margin-bottom: 16px; }
   .modal-close { width: 100%; padding: 12px; background: var(--surface2); border: 1px solid var(--border); border-radius: 8px; color: var(--muted); font-family: 'DM Mono', monospace; font-size: 13px; cursor: pointer; }
 
-  /* TOAST */
-  .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--accent); color: #0e0e0f; padding: 10px 20px; border-radius: 20px; font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500; opacity: 0; transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1); z-index: 999; white-space: nowrap; pointer-events: none; }
+  /* ── TOAST ── */
+  .toast { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(80px); background: var(--accent); color: #0d0d0e; padding: 10px 20px; border-radius: 20px; font-family: 'DM Mono', monospace; font-size: 12px; font-weight: 500; opacity: 0; transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1); z-index: 999; white-space: nowrap; pointer-events: none; }
   .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
   ::-webkit-scrollbar { width: 3px; }
@@ -185,36 +221,61 @@
 </style>
 </head>
 <body>
-
 <div class="app">
+
+  <!-- HEADER -->
   <div class="header">
     <div class="logo">LENS LOG</div>
-    <button class="btn-csv" onclick="exportCSV()">📥 CSV</button>
+    <div class="header-right">
+      <button class="btn-sm" onclick="exportCSV()">📥 CSV</button>
+    </div>
   </div>
 
+  <!-- TOP PANEL -->
   <div class="top-panel">
     <div class="form-area">
 
-      <!-- ① URL入力 → AIタイトル取得 -->
-      <div class="field">
-        <label>① Google レンズのURL</label>
-        <div class="url-row">
-          <input type="url" id="itemUrl" placeholder="URLを貼り付け" inputmode="url">
-          <button class="btn-fetch" id="fetchBtn" onclick="fetchTitle()">取得</button>
+      <!-- AI スキャンボタン -->
+      <button class="ai-scan-btn" onclick="startAIScan()">
+        <span class="ai-scan-icon">🤖</span>
+        <div class="ai-scan-label">
+          <div class="ai-scan-main">AI で商品を識別する</div>
+          <div class="ai-scan-sub">写真を撮る or 選ぶ → ブランド・商品名を自動認識</div>
         </div>
-        <div class="fetch-status" id="fetchStatus">
-          <div class="mini-spinner" id="fetchSpinner"></div>
-          <div class="fetch-status-text" id="fetchStatusText">タイトルを取得中…</div>
+      </button>
+
+      <!-- AI 結果カード -->
+      <div class="ai-result" id="aiResult">
+        <div class="ai-result-header">
+          <div class="ai-result-badge">✨ AI 識別結果</div>
+          <button class="ai-result-retry" onclick="startAIScan()">再スキャン</button>
+        </div>
+        <div class="ai-result-body">
+          <div class="ai-result-row">
+            <div class="ai-result-lbl">ブランド / 種別</div>
+            <div class="ai-result-val" id="aiResultBrand">—</div>
+          </div>
+          <div class="ai-result-row">
+            <div class="ai-result-lbl">商品名 / 詳細</div>
+            <div class="ai-result-val" id="aiResultName">—</div>
+          </div>
+          <div class="ai-result-row">
+            <div class="ai-result-lbl">特徴・状態</div>
+            <div class="ai-result-val" id="aiResultDesc">—</div>
+          </div>
         </div>
       </div>
 
-      <!-- ② 商品タイトル（修正可能） -->
+      <!-- ① 商品タイトル -->
       <div class="field">
-        <label>② 商品タイトル（修正可）</label>
-        <div class="title-row">
-          <input type="text" id="itemName" placeholder="URLから自動取得 or 手動入力">
-          <button class="btn-clear-title" onclick="document.getElementById('itemName').value=''" title="クリア">✕</button>
-        </div>
+        <label>① 商品タイトル（修正可）</label>
+        <input type="text" id="itemName" placeholder="AI識別後に自動入力 or 手動入力">
+      </div>
+
+      <!-- ② ブランド -->
+      <div class="field">
+        <label>② ブランド / 種別</label>
+        <input type="text" id="itemBrand" placeholder="例: Louis Vuitton, アンティーク陶器">
       </div>
 
       <!-- ③ 金額 -->
@@ -227,24 +288,21 @@
       </div>
 
       <!-- ④ 画像 -->
-      <div class="images-section">
-        <div class="images-label">④ 画像（メイン1枚 ＋ 追加最大5枚）</div>
-
-        <!-- メイン画像 -->
-        <div class="main-img-area" id="mainImgArea" onclick="pickImage('main')">
-          <div class="main-img-hint"><span>📷</span>メイン画像をタップして追加</div>
+      <div class="field">
+        <div class="images-label" style="margin-bottom:8px">④ 画像（メイン1枚 ＋ 追加最大5枚）</div>
+        <div class="main-img-area" id="mainImgArea" onclick="pickMain()">
+          <div class="main-img-hint"><span>🖼️</span>タップして画像を追加</div>
         </div>
-
-        <!-- サブ画像 x5 -->
-        <div class="sub-imgs-grid" id="subImgsGrid"></div>
-
-        <button class="btn-camera" onclick="openCamera('main')">📷 カメラで撮影する</button>
+        <div style="margin-top:8px">
+          <div class="sub-imgs-grid" id="subImgsGrid"></div>
+        </div>
+        <button class="btn-camera" style="margin-top:8px" onclick="openCamera('sub')">📷 カメラで追加画像を撮影</button>
       </div>
 
       <!-- ⑤ メモ -->
       <div class="field">
         <label>⑤ メモ</label>
-        <textarea id="itemNote" rows="2" placeholder="購入先・状態・コンディションなど"></textarea>
+        <textarea id="itemNote" rows="2" placeholder="購入先・状態・サイズ・付属品など"></textarea>
       </div>
 
       <button class="submit-btn" onclick="addItem()">記録する →</button>
@@ -266,22 +324,29 @@
   </div>
 </div>
 
-<!-- hidden file inputs -->
-<input type="file" id="fileInputMain" accept="image/*" style="display:none" onchange="onFileMain(this)">
-<input type="file" id="fileInputSub" accept="image/*" style="display:none" onchange="onFileSub(this)">
+<!-- file inputs -->
+<input type="file" id="fileMain" accept="image/*" style="display:none" onchange="onFileMain(this)">
+<input type="file" id="fileSub" accept="image/*" style="display:none" onchange="onFileSub(this)">
+
+<!-- AI OVERLAY -->
+<div class="ai-overlay" id="aiOverlay">
+  <div class="ai-spinner"></div>
+  <div class="ai-overlay-label">AI が画像を解析中…</div>
+  <div class="ai-overlay-sub">ブランド・商品名・特徴を識別しています</div>
+</div>
 
 <!-- CAMERA MODAL -->
 <div class="camera-modal" id="cameraModal">
   <div class="camera-header">
     <div>
-      <div class="camera-title">CAMERA</div>
-      <div class="camera-target-label" id="cameraTargetLabel">メイン画像</div>
+      <div class="camera-title">SCAN</div>
+      <div class="camera-subtitle" id="camSubtitle">商品を撮影してください</div>
     </div>
     <button class="camera-close" onclick="closeCamera()">✕ 閉じる</button>
   </div>
   <video id="videoEl" autoplay playsinline muted></video>
   <div class="camera-footer">
-    <div class="gallery-btn2" onclick="triggerGalleryFromCamera()">🖼️</div>
+    <div class="cam-gallery-btn" onclick="triggerGallery()">🖼️</div>
     <button class="shutter-btn" onclick="shootPhoto()"></button>
     <div style="width:48px"></div>
   </div>
@@ -289,13 +354,14 @@
 
 <!-- DETAIL MODAL -->
 <div class="modal-bg" id="modal" onclick="bgClose(event)">
-  <div class="modal">
+  <div class="detail-modal">
     <div class="modal-handle"></div>
     <img id="mMainImg" class="modal-main-img" src="" alt="" style="display:none">
-    <div class="modal-sub-imgs" id="mSubImgs"></div>
+    <div class="modal-sub-row" id="mSubRow"></div>
     <div class="modal-body">
+      <div class="modal-brand" id="mBrand"></div>
       <div class="modal-name" id="mName"></div>
-      <div class="modal-url" id="mUrl"></div>
+      <div class="modal-ai-desc" id="mDesc" style="display:none"></div>
       <div class="modal-price" id="mPrice"></div>
       <div class="modal-note" id="mNote"></div>
       <div class="modal-date" id="mDate"></div>
@@ -308,148 +374,105 @@
 <canvas id="canvas"></canvas>
 
 <script>
-const KEY = 'lenslog_v3';
+const KEY = 'lenslog_v4';
 let items = [];
-
-// 現在編集中の画像データ
 let mainImg = null;
-let subImgs = [null, null, null, null, null]; // 最大5枚
-
-// カメラ
+let subImgs = [null, null, null, null, null];
 let stream = null;
-let cameraTarget = 'main'; // 'main' or 0-4
+let cameraMode = 'ai'; // 'ai' or 'sub'
+let pendingSubIdx = -1;
 
 /* ── STORAGE ── */
 function load() { try { items = JSON.parse(localStorage.getItem(KEY)) || []; } catch { items = []; } }
 function save() { localStorage.setItem(KEY, JSON.stringify(items)); }
 
-/* ── AI タイトル取得 ── */
-async function fetchTitle() {
-  const url = document.getElementById('itemUrl').value.trim();
-  if (!url) { toast('⚠️ URLを入力してください'); return; }
-  if (!url.startsWith('http')) { toast('⚠️ http または https から始まるURLを入力してください'); return; }
+/* ── AI SCAN ── */
+function startAIScan() {
+  cameraMode = 'ai';
+  openCamera('ai');
+}
 
-  const btn = document.getElementById('fetchBtn');
-  const status = document.getElementById('fetchStatus');
-  const statusText = document.getElementById('fetchStatusText');
-  const spinner = document.getElementById('fetchSpinner');
-
-  btn.disabled = true;
-  status.classList.add('show');
-  spinner.style.display = 'block';
-  statusText.textContent = 'タイトルを取得中…';
-
+async function runAIAnalysis(imageData) {
+  document.getElementById('aiOverlay').classList.add('open');
   try {
     const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
-        max_tokens: 200,
-        tools: [{ type: 'web_search_20250305', name: 'web_search' }],
+        max_tokens: 1000,
         messages: [{
           role: 'user',
-          content: `次のURLのページタイトルまたは商品名を日本語で教えてください。商品名または記事タイトルのみを返してください。余計な説明は不要です。\n\nURL: ${url}`
+          content: [
+            {
+              type: 'image',
+              source: { type: 'base64', media_type: 'image/jpeg', data: imageData.split(',')[1] }
+            },
+            {
+              type: 'text',
+              text: `この画像に写っている商品を詳しく識別してください。ブランドバッグ、アンティーク品、雑貨などが対象です。
+
+以下のJSON形式のみで回答してください（説明文不要）:
+{
+  "brand": "ブランド名または種別（例: Louis Vuitton / アンティーク陶器 / 不明）",
+  "name": "商品名または詳細名称（例: モノグラム ネヴァーフル MM / 明治期 伊万里焼 花瓶）",
+  "description": "特徴・状態・素材・時代などの詳細説明（2〜3文）",
+  "confidence": "high / medium / low"
+}`
+            }
+          ]
         }]
       })
     });
 
     const data = await res.json();
-    // テキストブロックを取り出す
     const textBlock = (data.content || []).find(b => b.type === 'text');
-    const title = textBlock ? textBlock.text.trim().replace(/^["「]|["」]$/g, '') : '';
+    const raw = textBlock ? textBlock.text.trim() : '';
 
-    if (title) {
-      document.getElementById('itemName').value = title;
-      spinner.style.display = 'none';
-      statusText.textContent = '✅ タイトルを取得しました';
-      toast('✅ タイトルを取得しました');
-    } else {
-      spinner.style.display = 'none';
-      statusText.textContent = '⚠️ 取得できませんでした。手動で入力してください';
+    // JSON抽出
+    const jsonMatch = raw.match(/\{[\s\S]*\}/);
+    if (!jsonMatch) throw new Error('parse error');
+    const result = JSON.parse(jsonMatch[0]);
+
+    document.getElementById('aiOverlay').classList.remove('open');
+
+    // 結果をUIに反映
+    document.getElementById('aiResultBrand').textContent = result.brand || '—';
+    document.getElementById('aiResultName').textContent = result.name || '—';
+    document.getElementById('aiResultDesc').textContent = result.description || '—';
+    document.getElementById('aiResult').classList.add('show');
+
+    // フォームに自動入力
+    document.getElementById('itemName').value = result.name || '';
+    document.getElementById('itemBrand').value = result.brand || '';
+    document.getElementById('itemName').classList.add('ai-filled');
+    document.getElementById('itemBrand').classList.add('ai-filled');
+
+    // メイン画像にもセット
+    mainImg = imageData;
+    renderMainImg();
+
+    toast('✅ AI識別完了！内容を確認・修正してください');
+
+    // 信頼度が低い場合は注記
+    if (result.confidence === 'low') {
+      setTimeout(() => toast('⚠️ 識別精度が低めです。内容をご確認ください'), 2000);
     }
+
   } catch (e) {
-    spinner.style.display = 'none';
-    statusText.textContent = '⚠️ エラーが発生しました。手動で入力してください';
-  }
-
-  btn.disabled = false;
-}
-
-/* ── 画像選択 ── */
-function pickImage(target) {
-  if (target === 'main') {
-    cameraTarget = 'main';
-    document.getElementById('fileInputMain').click();
-  } else {
-    cameraTarget = target;
-    document.getElementById('fileInputSub').click();
+    document.getElementById('aiOverlay').classList.remove('open');
+    // 画像はセット
+    mainImg = imageData;
+    renderMainImg();
+    toast('⚠️ AI識別に失敗しました。手動で入力してください');
   }
 }
 
-function onFileMain(input) {
-  const f = input.files[0]; if (!f) return;
-  readFile(f, data => { mainImg = data; renderMainImg(); });
-  input.value = '';
-}
-
-function onFileSub(input) {
-  const f = input.files[0]; if (!f) return;
-  const idx = typeof cameraTarget === 'number' ? cameraTarget : findNextSubSlot();
-  if (idx === -1) { toast('⚠️ 追加画像は最大5枚です'); return; }
-  readFile(f, data => { subImgs[idx] = data; renderSubImgs(); });
-  input.value = '';
-}
-
-function findNextSubSlot() {
-  const i = subImgs.indexOf(null);
-  return i; // -1 if full
-}
-
-function readFile(file, cb) {
-  const r = new FileReader();
-  r.onload = e => cb(e.target.result);
-  r.readAsDataURL(file);
-}
-
-function renderMainImg() {
-  const area = document.getElementById('mainImgArea');
-  if (mainImg) {
-    area.classList.add('has-img');
-    area.innerHTML = `
-      <img src="${mainImg}" alt="">
-      <button class="img-remove-btn" onclick="event.stopPropagation();removeMain()">✕</button>
-    `;
-  } else {
-    area.classList.remove('has-img');
-    area.innerHTML = `<div class="main-img-hint"><span>📷</span>メイン画像をタップして追加</div>`;
-  }
-}
-
-function removeMain() { mainImg = null; renderMainImg(); }
-
-function renderSubImgs() {
-  const grid = document.getElementById('subImgsGrid');
-  grid.innerHTML = subImgs.map((img, i) => {
-    if (img) {
-      return `<div class="sub-img-slot has-img" onclick="pickImage(${i})">
-        <img src="${img}" alt="">
-        <button class="img-remove-btn" onclick="event.stopPropagation();removeSub(${i})">✕</button>
-      </div>`;
-    } else {
-      return `<div class="sub-img-slot" onclick="pickImage(${i})">
-        <div class="sub-img-add">＋</div>
-      </div>`;
-    }
-  }).join('');
-}
-
-function removeSub(i) { subImgs[i] = null; renderSubImgs(); }
-
-/* ── カメラ ── */
-async function openCamera(target) {
-  cameraTarget = target;
-  document.getElementById('cameraTargetLabel').textContent = target === 'main' ? 'メイン画像' : `追加画像 ${target + 1}`;
+/* ── CAMERA ── */
+async function openCamera(mode) {
+  cameraMode = mode;
+  document.getElementById('camSubtitle').textContent =
+    mode === 'ai' ? 'AIで識別する商品を撮影' : '追加画像を撮影';
   document.getElementById('cameraModal').classList.add('open');
   try {
     stream = await navigator.mediaDevices.getUserMedia({ video: { facingMode: 'environment' }, audio: false });
@@ -472,45 +495,116 @@ function shootPhoto() {
   canvas.getContext('2d').drawImage(video, 0, 0);
   const data = canvas.toDataURL('image/jpeg', 0.85);
   closeCamera();
-  if (cameraTarget === 'main') {
-    mainImg = data; renderMainImg();
+
+  if (cameraMode === 'ai') {
+    runAIAnalysis(data);
   } else {
-    const idx = typeof cameraTarget === 'number' ? cameraTarget : findNextSubSlot();
-    if (idx >= 0) { subImgs[idx] = data; renderSubImgs(); }
+    setSubImg(data);
   }
 }
 
-function triggerGalleryFromCamera() {
+function triggerGallery() {
   closeCamera();
-  if (cameraTarget === 'main') document.getElementById('fileInputMain').click();
-  else document.getElementById('fileInputSub').click();
+  if (cameraMode === 'ai') {
+    document.getElementById('fileMain').click();
+  } else {
+    document.getElementById('fileSub').click();
+  }
+}
+
+/* ── FILE INPUTS ── */
+function pickMain() { document.getElementById('fileMain').click(); }
+
+function onFileMain(input) {
+  const f = input.files[0]; if (!f) return;
+  readFile(f, data => {
+    if (cameraMode === 'ai') {
+      runAIAnalysis(data);
+    } else {
+      mainImg = data; renderMainImg();
+    }
+  });
+  input.value = '';
+}
+
+function onFileSub(input) {
+  const f = input.files[0]; if (!f) return;
+  readFile(f, data => setSubImg(data));
+  input.value = '';
+}
+
+function setSubImg(data) {
+  const idx = pendingSubIdx >= 0 ? pendingSubIdx : subImgs.indexOf(null);
+  if (idx === -1) { toast('⚠️ 追加画像は最大5枚です'); return; }
+  subImgs[idx] = data;
+  pendingSubIdx = -1;
+  renderSubImgs();
+}
+
+function readFile(file, cb) {
+  const r = new FileReader();
+  r.onload = e => cb(e.target.result);
+  r.readAsDataURL(file);
+}
+
+/* ── RENDER IMAGES ── */
+function renderMainImg() {
+  const area = document.getElementById('mainImgArea');
+  if (mainImg) {
+    area.classList.add('has-img');
+    area.innerHTML = `<img src="${mainImg}" alt=""><button class="img-remove-btn" onclick="event.stopPropagation();mainImg=null;renderMainImg()">✕</button>`;
+  } else {
+    area.classList.remove('has-img');
+    area.innerHTML = `<div class="main-img-hint"><span>🖼️</span>タップして画像を追加</div>`;
+  }
+}
+
+function renderSubImgs() {
+  document.getElementById('subImgsGrid').innerHTML = subImgs.map((img, i) =>
+    img
+      ? `<div class="sub-img-slot has-img" onclick="pickSubSlot(${i})"><img src="${img}" alt=""><button class="img-remove-btn" onclick="event.stopPropagation();subImgs[${i}]=null;renderSubImgs()">✕</button></div>`
+      : `<div class="sub-img-slot" onclick="pickSubSlot(${i})"><div class="sub-img-add">＋</div></div>`
+  ).join('');
+}
+
+function pickSubSlot(i) {
+  pendingSubIdx = i;
+  cameraMode = 'sub';
+  document.getElementById('fileSub').click();
 }
 
 /* ── CRUD ── */
 function addItem() {
   const name = document.getElementById('itemName').value.trim();
   if (!name) { toast('⚠️ 商品タイトルを入力してください'); return; }
-  const url = document.getElementById('itemUrl').value.trim();
+  const brand = document.getElementById('itemBrand').value.trim();
   const price = document.getElementById('itemPrice').value;
   const note = document.getElementById('itemNote').value.trim();
+  const aiDesc = document.getElementById('aiResultDesc').textContent;
 
   items.unshift({
-    id: Date.now(), name, url,
+    id: Date.now(), name, brand,
     price: price ? parseInt(price) : null,
-    note,
-    mainImg,
+    note, mainImg,
     subImgs: [...subImgs],
+    aiDesc: aiDesc !== '—' ? aiDesc : '',
     date: new Date().toLocaleDateString('ja-JP')
   });
   save(); render(); updateStats(); resetForm(); toast('✅ 記録しました！');
 }
 
 function resetForm() {
-  ['itemUrl','itemName','itemPrice','itemNote'].forEach(id => document.getElementById(id).value = '');
-  mainImg = null; subImgs = [null,null,null,null,null];
+  ['itemName','itemBrand','itemPrice','itemNote'].forEach(id => {
+    const el = document.getElementById(id);
+    el.value = '';
+    el.classList.remove('ai-filled');
+  });
+  mainImg = null; subImgs = [null,null,null,null,null]; pendingSubIdx = -1;
   renderMainImg(); renderSubImgs();
-  document.getElementById('fetchStatus').classList.remove('show');
-  document.getElementById('fetchBtn').disabled = false;
+  document.getElementById('aiResult').classList.remove('show');
+  document.getElementById('aiResultBrand').textContent = '—';
+  document.getElementById('aiResultName').textContent = '—';
+  document.getElementById('aiResultDesc').textContent = '—';
 }
 
 function del(id, e) {
@@ -521,18 +615,20 @@ function del(id, e) {
 
 function render(q = '') {
   const grid = document.getElementById('grid');
-  const list = q ? items.filter(i => i.name.toLowerCase().includes(q.toLowerCase()) || (i.note||'').toLowerCase().includes(q.toLowerCase())) : items;
+  const list = q
+    ? items.filter(i => [i.name, i.brand, i.note].join(' ').toLowerCase().includes(q.toLowerCase()))
+    : items;
   if (!list.length) {
     grid.innerHTML = `<div class="empty"><div class="empty-icon">📭</div><div class="empty-txt">${q ? '見つかりません' : 'まだ記録なし'}</div></div>`;
     return;
   }
   grid.innerHTML = list.map(item => `
     <div class="card" onclick="openModal(${item.id})">
-      ${item.mainImg ? `<img class="card-img" src="${item.mainImg}" alt="">` : `<div class="card-no-img">📦</div>`}
+      ${item.mainImg ? `<img class="card-img" src="${item.mainImg}" alt="">` : `<div class="card-no-img">🏷️</div>`}
       <div class="card-body">
+        ${item.brand ? `<div class="card-brand">${esc(item.brand)}</div>` : ''}
         <div class="card-name">${esc(item.name)}</div>
         <div class="card-price">${item.price != null ? '¥'+item.price.toLocaleString() : '—'}</div>
-        ${item.note ? `<div class="card-note">${esc(item.note)}</div>` : ''}
       </div>
       <div class="card-footer">
         <span class="card-date">${item.date}</span>
@@ -543,46 +639,43 @@ function render(q = '') {
 
 function updateStats() {
   document.getElementById('sCount').textContent = items.length;
-  const total = items.filter(i=>i.price!=null).reduce((s,i)=>s+i.price,0);
-  document.getElementById('sTotal').textContent = '¥'+total.toLocaleString();
+  const total = items.filter(i => i.price != null).reduce((s, i) => s + i.price, 0);
+  document.getElementById('sTotal').textContent = '¥' + total.toLocaleString();
 }
 
 function openModal(id) {
-  const item = items.find(i=>i.id===id); if (!item) return;
-  const mainImgEl = document.getElementById('mMainImg');
-  if (item.mainImg) { mainImgEl.src = item.mainImg; mainImgEl.style.display = 'block'; }
-  else { mainImgEl.style.display = 'none'; }
-
-  // サブ画像
+  const item = items.find(i => i.id === id); if (!item) return;
+  const mi = document.getElementById('mMainImg');
+  if (item.mainImg) { mi.src = item.mainImg; mi.style.display = 'block'; } else { mi.style.display = 'none'; }
   const subs = (item.subImgs || []).filter(Boolean);
-  const subWrap = document.getElementById('mSubImgs');
-  subWrap.style.display = subs.length ? 'flex' : 'none';
-  subWrap.innerHTML = subs.map(s => `<img class="modal-sub-img" src="${s}" alt="">`).join('');
-
+  const subRow = document.getElementById('mSubRow');
+  subRow.style.display = subs.length ? 'flex' : 'none';
+  subRow.innerHTML = subs.map(s => `<img class="modal-sub-img" src="${s}" alt="">`).join('');
+  document.getElementById('mBrand').textContent = item.brand || '';
   document.getElementById('mName').textContent = item.name;
-  const urlEl = document.getElementById('mUrl');
-  if (item.url) { urlEl.innerHTML = `🔗 <a href="${esc(item.url)}" target="_blank" rel="noopener">${esc(item.url)}</a>`; urlEl.style.display='block'; }
-  else { urlEl.style.display='none'; }
-  document.getElementById('mPrice').textContent = item.price!=null ? '¥'+item.price.toLocaleString() : '価格未設定';
+  const descEl = document.getElementById('mDesc');
+  if (item.aiDesc) { descEl.textContent = item.aiDesc; descEl.style.display = 'block'; } else { descEl.style.display = 'none'; }
+  document.getElementById('mPrice').textContent = item.price != null ? '¥' + item.price.toLocaleString() : '価格未設定';
   document.getElementById('mNote').textContent = item.note || '';
-  document.getElementById('mDate').textContent = '記録日: '+item.date;
+  document.getElementById('mDate').textContent = '記録日: ' + item.date;
   document.getElementById('modal').classList.add('open');
 }
 
-function bgClose(e) { if (e.target===document.getElementById('modal')) document.getElementById('modal').classList.remove('open'); }
+function bgClose(e) { if (e.target === document.getElementById('modal')) document.getElementById('modal').classList.remove('open'); }
 
 function exportCSV() {
   if (!items.length) { toast('⚠️ データがありません'); return; }
-  const rows = [['商品タイトル','URL','金額','メモ','記録日'],
-    ...items.map(i=>[
+  const rows = [['商品タイトル', 'ブランド', '金額', 'AI説明', 'メモ', '記録日'],
+    ...items.map(i => [
       `"${(i.name||'').replace(/"/g,'""')}"`,
-      `"${(i.url||'').replace(/"/g,'""')}"`,
-      i.price??'',
+      `"${(i.brand||'').replace(/"/g,'""')}"`,
+      i.price ?? '',
+      `"${(i.aiDesc||'').replace(/"/g,'""').replace(/\n/g,' ')}"`,
       `"${(i.note||'').replace(/"/g,'""').replace(/\n/g,' ')}"`,
       i.date
     ])];
   const a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob(['\uFEFF'+rows.map(r=>r.join(',')).join('\n')],{type:'text/csv;charset=utf-8;'}));
+  a.href = URL.createObjectURL(new Blob(['\uFEFF' + rows.map(r => r.join(',')).join('\n')], { type: 'text/csv;charset=utf-8;' }));
   a.download = `lenslog_${new Date().toISOString().slice(0,10)}.csv`;
   a.click();
   toast('📥 CSVを書き出しました');
@@ -591,11 +684,10 @@ function exportCSV() {
 function toast(msg) {
   const t = document.getElementById('toast');
   t.textContent = msg; t.classList.add('show');
-  clearTimeout(t._t); t._t = setTimeout(()=>t.classList.remove('show'), 2600);
+  clearTimeout(t._t); t._t = setTimeout(() => t.classList.remove('show'), 2800);
 }
 function esc(s) { return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 
-// 初期化
 load(); render(); updateStats(); renderMainImg(); renderSubImgs();
 </script>
 </body>
