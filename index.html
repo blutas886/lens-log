@@ -410,13 +410,27 @@ async function runAIAnalysis(imageData) {
             },
             {
               type: 'text',
-              text: `この画像に写っている商品を詳しく識別してください。ブランドバッグ、アンティーク品、雑貨などが対象です。
+              text: `あなたはブランドバッグ・アンティーク・ヴィンテージ品・雑貨の専門鑑定士です。画像を見て商品を詳細に識別してください。
 
-以下のJSON形式のみで回答してください（説明文不要）:
+【重要な識別ルール】
+- Louis Vuitton: モノグラム柄(LVロゴ+花柄)、ダミエ柄(市松模様)、エピ(革)、ヴェルニ(エナメル)などラインを必ず特定。バッグ名も特定(例:ネヴァーフル、スピーディ、アルマ、ポシェット、パラス、ポンヌフ等)
+- Gucci: GGロゴ柄、竹(バンブー)ハンドル、ホースビット金具、ディオニュソス等を識別
+- Chanel: マトラッセキルティング、CC金具、チェーンストラップ等を識別。クラシックフラップ、2.55、ボーイシャネル等
+- Hermès: バーキン・ケリー・コンスタンス等の形状、クロコ・トゴ・スイフト等の革種を識別
+- Prada: サフィアーノレザー、ナイロン素材、三角プレート等を識別
+- アンティーク: 時代・産地・様式・素材を推定(例:明治期 薩摩焼 花瓶、江戸期 伊万里焼、昭和レトロ等)
+- 雑貨: ブランド・素材・用途・時代を識別
+
+【絶対に守ること】
+- 「不明」と答えず、見えている特徴(柄・素材・金具・形・色・ロゴ)から最善の推測をすること
+- ブランドバッグはラインとモデル名まで特定すること
+- 確信が持てなくても「おそらく〜と思われる」として答えること
+
+以下のJSON形式のみで回答（前後に説明文・マークダウン不要）:
 {
-  "brand": "ブランド名または種別（例: Louis Vuitton / アンティーク陶器 / 不明）",
-  "name": "商品名または詳細名称（例: モノグラム ネヴァーフル MM / 明治期 伊万里焼 花瓶）",
-  "description": "特徴・状態・素材・時代などの詳細説明（2〜3文）",
+  "brand": "ブランド名（例: Louis Vuitton / Chanel / Hermès / アンティーク陶器）",
+  "name": "ライン名＋モデル名（例: モノグラム ネヴァーフル MM / マトラッセ クラシックフラップ M / 明治期 薩摩焼 花瓶）",
+  "description": "見えている特徴の詳細説明。柄・素材・金具・状態・サイズ感・特徴的な要素を具体的に2〜3文で",
   "confidence": "high / medium / low"
 }`
             }
@@ -493,7 +507,7 @@ function shootPhoto() {
   const canvas = document.getElementById('canvas');
   canvas.width = video.videoWidth; canvas.height = video.videoHeight;
   canvas.getContext('2d').drawImage(video, 0, 0);
-  const data = canvas.toDataURL('image/jpeg', 0.85);
+  const data = canvas.toDataURL('image/jpeg', 0.92);
   closeCamera();
 
   if (cameraMode === 'ai') {
